@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Able & NGL - Internal Presentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --text-color: #212529;
+            --primary-color: #007BFF;
+            --secondary-color: #FFC107;
+            --accent-color: #4A5568;
+            --slide-bg: white;
+            --shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 5vw;
+            box-sizing: border-box;
+            background-color: var(--slide-bg);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            transform: scale(0.95);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            z-index: 1;
+        }
+
+        .slide-content {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--accent-color);
+            margin-bottom: 3rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+
+        p, li {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--accent-color);
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .logo-container img {
+            max-height: 50px;
+        }
+        
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .flowchart {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 120px;
+        }
+
+        .flow-step i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            background-color: #e7f3ff;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .flow-step span {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: 400;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: #BCCCDC;
+            align-self: center;
+        }
+
+        .role-card-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 2rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .role-card {
+            background-color: #F8F9FA;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 30%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        .role-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .role-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .role-card ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        
+        .role-card li {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .role-card li::before {
+            content: '\f00c'; /* check icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--secondary-color);
+            position: absolute;
+            left: 0;
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+        
+        .nav-arrow:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        #prev-btn { left: 20px; }
+        #next-btn { right: 20px; }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .slide-title { font-size: 2rem; }
+            h2 { font-size: 1.2rem; }
+            p, li { font-size: 1rem; }
+            .flowchart { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); margin: 1rem 0; }
+            .role-card-container { flex-direction: column; align-items: center; }
+            .role-card { width: 80%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+
+        <!-- Slide 1: Title -->
+        <section class="slide active" id="slide1">
+            <img src="https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=3600" class="background-image">
+            <div class="slide-content">
+                <h1>Online English Courses with National Geographic Learning (NGL)</h1>
+                <h2>Able's New Course Structure – Internal Presentation</h2>
+                <div class="logo-container">
+                    <img src="https://i.ibb.co/7k7Vdcy/able-logo-placeholder.png" alt="Able Logo">
+                    <img src="https://i.ibb.co/P9g1fWd/ngl-logo-placeholder.png" alt="NGL Logo">
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Context -->
+        <section class="slide" id="slide2">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=3600" class="background-image">
+            <div class="slide-content">
+                <h2 class="slide-title">The Opportunity</h2>
+                <p>Able is launching a new format for online courses using NGL, which offers high-quality, ready-made English courses focused on global topics like nature, science, and culture.</p>
+            </div>
+        </section>
+
+        <!-- Slide 3: What’s Changing -->
+        <section class="slide" id="slide3">
+            <div class="slide-content">
+                <h2 class="slide-title">What’s Changing</h2>
+                <p>Moving from a generic school model to specialized courses led by individual teachers. Each teacher chooses their course, targeting smaller groups with specific durations and age ranges, supported by personalized communication and marketing.</p>
+            </div>
+        </section>
+
+        <!-- Slide 4: Foundations -->
+        <section class="slide" id="slide4">
+            <div class="slide-content">
+                <h2 class="slide-title">Foundations of the Project</h2>
+                <p>Able has institutional access to the NGL platform, with full access to a catalog of interactive digital English courses including videos, quizzes, texts, and digital books.</p>
+            </div>
+        </section>
+
+        <!-- Slide 5: How It Works -->
+        <section class="slide" id="slide5">
+            <div class="slide-content">
+                <h2 class="slide-title">How It Works (Step-by-Step)</h2>
+                <div class="flowchart">
+                    <div class="flow-step"> <i class="fa-solid fa-person-chalkboard"></i> <span>Teacher chooses course</span> </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step"> <i class="fa-solid fa-file-lines"></i> <span>Fills out form</span> </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step"> <i class="fa-solid fa-laptop-code"></i> <span>Able creates sales page</span> </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step"> <i class="fa-solid fa-camera-retro"></i> <span>Media team promotes</span> </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step"> <i class="fa-solid fa-cart-shopping"></i> <span>Student purchases</span> </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step"> <i class="fa-solid fa-users-gear"></i> <span>Ops adds student</span> </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step"> <i class="fa-solid fa-dollar-sign"></i> <span>Able pays for license</span> </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step"> <i class="fa-solid fa-envelope-open-text"></i> <span>Student gets links</span> </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Teachers’ Role -->
+        <section class="slide" id="slide6">
+            <div class="slide-content role-card-container">
+                <div class="role-card">
+                    <i class="fa-solid fa-person-chalkboard"></i>
+                    <h3>Teachers’ Role</h3>
+                    <ul>
+                        <li>Choose the course</li>
+                        <li>Provide course details</li>
+                        <li>Lead weekly live classes</li>
+                        <li>Engage students</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Operations Team’s Role -->
+        <section class="slide" id="slide7">
+            <div class="slide-content role-card-container">
+                <div class="role-card">
+                    <i class="fa-solid fa-gears"></i>
+                    <h3>Operations Team’s Role</h3>
+                    <ul>
+                        <li>Create classes on the platform</li>
+                        <li>Purchase digital licenses</li>
+                        <li>Add students</li>
+                        <li>Send access emails</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Media & Video Team’s Role -->
+        <section class="slide" id="slide8">
+            <div class="slide-content role-card-container">
+                <div class="role-card">
+                    <i class="fa-solid fa-video"></i>
+                    <h3>Media & Video Team’s Role</h3>
+                    <ul>
+                        <li>Create visuals, reels, & content</li>
+                        <li>Highlight unique aspects</li>
+                        <li>Support student recruitment</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Final Goal -->
+        <section class="slide" id="slide9">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=3600" class="background-image">
+            <div class="slide-content">
+                <h2 class="slide-title">Final Goal</h2>
+                <p>Offer modern, engaging, and scalable online English courses using global-quality content without building from scratch, while empowering teachers and increasing variety in the course catalog.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <button id="prev-btn" class="nav-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </button>
+    <button id="next-btn" class="nav-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+    </button>
+    <div id="slide-counter" class="slide-counter">1 / 9</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            const presentationContainer = document.querySelector('.presentation-container');
+            
+            let currentSlide = 0;
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            function showSlide(index) {
+                // Ensure index is within bounds
+                if (index < 0) index = 0;
+                if (index >= slides.length) index = slides.length - 1;
+                
+                currentSlide = index;
+
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === currentSlide);
+                });
+
+                slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+                prevBtn.style.display = currentSlide === 0 ? 'none' : 'flex';
+                nextBtn.style.display = currentSlide === slides.length - 1 ? 'none' : 'flex';
+            }
+
+            function next() {
+                showSlide(currentSlide + 1);
+            }
+
+            function prev() {
+                showSlide(currentSlide - 1);
+            }
+
+            function handleSwipe() {
+                const swipeThreshold = 50; // Minimum distance for a swipe
+                if (touchEndX < touchStartX - swipeThreshold) {
+                    next(); // Swiped left
+                }
+                if (touchEndX > touchStartX + swipeThreshold) {
+                    prev(); // Swiped right
+                }
+            }
+
+            // --- Event Listeners ---
+
+            // Button Clicks
+            nextBtn.addEventListener('click', next);
+            prevBtn.addEventListener('click', prev);
+            
+            // Keyboard Arrows
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') next();
+                if (e.key === 'ArrowLeft') prev();
+            });
+
+            // Touch Swipes
+            presentationContainer.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            presentationContainer.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+            
+            // --- Initial setup ---
+            showSlide(currentSlide);
+        });
+    </script>
+
+</body>
+</html>
